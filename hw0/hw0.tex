@@ -20,8 +20,12 @@
 \duedate{February 2, 2026 at 11:59 PM}
 
 \usepackage{url}
+\usepackage{mathtools}
+\usepackage{etextools}
+\usepackage{ifthen}
 \usepackage{float}
 \usepackage{amsfonts, amsmath, amsthm}
+\usepackage[ruled, linesnumbered]{algorithm2e}
 \usepackage{listings}
 \usepackage[shortlabels]{enumitem}
 \usepackage{hyperref}
@@ -44,6 +48,148 @@
 {}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+% Shortcuts
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil} % ceil function
+\DeclarePairedDelimiter\flr{\lfloor}{\rfloor} % floor function
+
+\DeclarePairedDelimiter\paren{(}{)} % parenthesis
+
+\newcommand{\df}{\displaystyle\frac} % displaystyle fraction
+\newcommand{\qeq}{\overset{?}{=}} % questionable equality
+
+\newcommand{\Mod}[1]{\;\mathrm{mod}\; #1} % modulo operator
+
+\newcommand{\comp}{\circ} % composition
+
+% Text Modifiers
+\newcommand{\tbf}{\textbf}
+\newcommand{\tit}{\textit}
+
+% MATH 163 and 263 Discrete Math @ CCP
+% Sets
+\DeclarePairedDelimiter\set{\{}{\}}
+\newcommand{\unite}{\cup}
+\newcommand{\inter}{\cap}
+\newcommand{\powset}{\mathcal{P}}
+\newcommand{\xor}{\oplus} % exclusive or
+
+\newcommand{\ints}{\mathbb{Z}}
+\newcommand{\nats}{\mathbb{N}}
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\tots}{\mathbb{Q}}
+
+\newcommand{\degree}{^\circ}
+
+
+% Counting
+\newcommand\perm[2][^n]{\prescript{#1\mkern-2.5mu}{}P_{#2}}
+\newcommand\comb[2][^n]{\prescript{#1\mkern-0.5mu}{}C_{#2}}
+
+% Relations
+\newcommand{\rel}{\mathcal{R}} % relation
+
+\setlength\parindent{0pt}
+
+% Directed Graphs
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning,chains,fit,shapes,calc}
+
+% Contradiction
+\newcommand{\contradiction}{{\hbox{%
+    \setbox0=\hbox{$\mkern-3mu\times\mkern-3mu$}%
+    \setbox1=\hbox to0pt{\hss$\times$\hss}%
+    \copy0\raisebox{0.5\wd0}{\copy1}\raisebox{-0.5\wd0}{\box1}\box0
+}}}
+
+%++++++++++++++ MATH 22a @ Harvard ++++++++++++
+\usepackage{bm}
+\newcommand{\img}{\operatorname{Image}}
+\newcommand{\tr}{\text{tr}}
+
+%++++++++++++++ CS 120 @ Harvard ++++++++++++++
+\newcommand{\nmod}[1]{\;\mathrm{mod}\;#1} % Modulo without space
+
+% NP
+\newcommand{\np}{\texttt{NP}_\texttt{search}}
+\newcommand{\p}{\texttt{P}_\texttt{search}}
+\newcommand{\nph}{\texttt{NP}_\texttt{search}\text{-hard}}
+\newcommand{\npc}{\texttt{NP}_\texttt{search}\text{-complete}}
+\newcommand{\EXP}{\texttt{EXP}_\texttt{search}}
+\newcommand{\xxhash}[2]{\rotatebox[origin=c]{#2}{$#1\parallel$}}
+
+% Algorithms
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}} % Coloring the comment as blue
+\SetCommentSty{mycommfont}
+
+\SetKwInput{KwInput}{Input}                % Set the Input
+\SetKwInput{KwOutput}{Output}              % set the Output
+
+\newcounter{compprobcf}
+\makeatletter
+\newenvironment{compprob}[1][]
+  {\renewcommand{\algorithmcfname}{Computational Problem}%
+   \refstepcounter{compprobcf} 
+   \begin{algorithm}[#1]
+   \long\def\@caption##1[##2]##3{%
+     \par
+     \begingroup\@parboxrestore
+     \if@minipage\@setminipage\fi
+     \normalsize \@makecaption{\AlCapSty{\AlCapFnt\algorithmcfname~\thecompprobcf}}{\ignorespaces ##3}%
+     \par\endgroup
+   }}
+  {\end{algorithm}}
+\makeatother
+
+
+%++++++++++++++ CS 124 @ Harvard ++++++++++++++
+\newcommand{\EX}[1]{\mathbb{E}\left[\text{#1}\right]} % expected value
+\newcommand{\VAR}[1]{\text{Var}\left(\text{#1}\right)} % variance 
+\newcommand{\Prob}[2]{\underset{#2}{\text{Pr}}\left[\text{#1}\right]}% probability
+
+%++++++++++++++ 18.02 @ MIT OCW ++++++++++++++
+\newcommand{\dir}[1]{\text{dir}\paren*{#1}}
+\newcommand{\dydx}[2]{\frac{\partial{#1}}{\partial{#2}}}
+\newcommand{\dydxdy}[2]{\frac{d{#1}}{d{#2}}}
+\newcommand{\dydxn}[3]{\frac{\partial^{#3}{#1}}{\partial{#2}^{#3}}}
+\newcommand{\grad}{\nabla}
+
+%++++++++++++++ STAT 110 ++++++++++++++
+\newcommand{\var}{\text{var}}
+\newcommand{\bin}[2]{\text{bin}$\paren*{#1,#2}$}
+\newcommand{\bern}[1]{\text{bern}\paren*{#1}} % Special case of binomial distribution
+\newcommand{\gauss}[2]{\mathcal{N}\paren*{#1,#2}}
+\newcommand{\SD}[1]{\text{SD}\paren*{#1}}
+% Discrete Distributions
+\newcommand{\Bern}{\text{Bern}}
+    \newcommand{\Bin}{\text{Bin}}
+    \newcommand{\Geom}{\text{Geom}}
+    \newcommand{\NGeom}{\text{NGeom}}
+    \newcommand{\Pois}{\text{Pois}}
+    \newcommand{\Hyper}{\text{Hyper}}
+    % Continuous Distributions
+    \newcommand{\Uniform}{\text{Unif}}
+    \newcommand{\Expon}{\text{Expon}}
+    \newcommand{\Gammaf}{\text{Gamma}}
+    \newcommand{\N}{\mathcal{N}}
+
+\newcommand{\E}{\mathbb{E}}
+% Independence
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+% correlation
+\newcommand{\corr}{\text{Corr}}
+% Covariance
+\newcommand{\cov}{\text{Cov}}
+% Standard deviation
+\newcommand{\std}{\text{SD}}
+
+\newcommand{\indset}{\mathbb{T}} % Index set
+
+% STAT 111
+\newcommand{\MSE}{\text{MSE}}
+\newcommand{\bias}{\text{Bias}}
+\newcommand{\ve}{\varepsilon}
 
 \begin{document}
 
@@ -83,7 +229,91 @@ In this class, we will be exploring the question of ``how do we model the trend 
 
 
 \begin{solution}
-	Your solution here.
+  \begin{enumerate}[1.]
+    \item  We have the system:
+      \[
+        \begin{cases}
+          y_1 = w_0 + w_1 x_1 \\ 
+          y_2 = w_0 + w_1 x_2
+        \end{cases}
+      \]
+      From the first equation, we solve for $w_0$:
+      \begin{equation}
+       w_0 = y_1- w_1 x_1 
+       \label{eq:1}
+      \end{equation}
+      Plugging into the section equation, we obtain:
+      \[
+        y_2 = w_1(x_1 - x_2) + y_1 \implies \boxed{w_1 = \frac{y_2 - y_1}{x_2 - x_1}}
+      \]
+      Substituting back into \autoref{eq:1}, we obtain:
+      \[
+        w_0 = y_1 - \frac{y_2 - y_1}{x_2 - x_1}x_1 = \frac{y_1(x_2 - x_1) - x_1(y_2 - y_1)}{x_2 - x_1} \implies \boxed{w_0 = \frac{y_1 x_2 - y_2 x_1}{x_2 - x_1}}
+      \]
+    \item We establish the system:
+      \[
+        \boxed{
+        \underbrace{
+        \begin{pmatrix}
+         y_1 \\ 
+         y_2
+     \end{pmatrix}}_{\bm{y}}=
+        \underbrace{
+        \begin{bmatrix}
+          1 & x_1 \\ 
+          1 &x_2 
+      \end{bmatrix}}_{\bm{X}}
+      \underbrace{
+        \begin{bmatrix}
+         w_0 \\ 
+        w_1 
+  \end{bmatrix}}_{\bm{w}}}
+      \]
+      With the given weights $\bm{w}$ and targets $\bm{y}$, we find $\bm{X}$ by finding the coefficients that match the equations in Question 1:
+      \[
+        \bm{X} = \begin{bmatrix}
+          a_{11} & a_{12} \\ 
+          a_{21} & a_{22}
+        \end{bmatrix}
+      \implies \bm{X}\bm{w} = 
+      \begin{pmatrix}
+        a_{11} w_0 + a_{12} w_1 \\
+        a_{21} w_0 + a_{22} w_2 
+      \end{pmatrix} = 
+      \begin{pmatrix}
+       y_1 \\ 
+       y_2
+      \end{pmatrix}
+    \]
+      So, we have $a_{11} = a_{21} = 1$ and $a_{12} = x_1$ and $a_{22} = x_2$.
+    \item For there to be a unique solution for $\bm{w}$, it must be the case that $\bm{X}$ has linearly independent rows (i.e., non-singular). Thus, $x_1 \neq x_2$. If this holds, then we can invert the matrix to solve for $\bm{w}$:
+      \[
+        \bm{y} = \bm{X}\bm{w} \implies \bm{w} = \bm{X}^{-1}\bm{y}
+      \]
+    \item We first note that the inverse of $\bm{X}$ is found by:
+      \[
+        \bm{X}^{-1} = \frac{1}{x_2 - x_1}
+        \begin{bmatrix}
+          x_2 & -x_1 \\ 
+          -1 & 1
+        \end{bmatrix} = 
+        \begin{bmatrix}
+          \frac{x_2}{x_2 - x_1} & \frac{- x_1}{x_2 - x_1} \\ 
+          -\frac{1}{x_2 - x_1} & \frac{1}{x_2 - x_1}
+        \end{bmatrix}
+      \]
+      So we get:
+      \[
+        \boxed{        \bm{w} = 
+        \begin{pmatrix}
+          \frac{y_1 x_2 - y_2 x_1}{x_2 - x_1}
+          \\
+          \frac{y_2 - y_1}{x_2 - x_1}
+      \end{pmatrix}}
+      \]
+      Which matches our result from Question 1. The advantage of phrasing the problem of fitting the model in terms of matrix notation is that it allows for scalability. The equation always remains $\bm{y} = \bm{X} \bm{w}$ and we can utilize matrix operations performed by a computer instead of solving large systems of equations by substitution.
+    \item No, our expression for $\bm{w}$ does not immediately apply. This is because our expression requires $\bm{X}^{-1}$ to have an inverse which requires $\bm{X}$ to be a square $n \times n$ matrix, or have as many data points as there are features. If we have only 2 features and millions of points, we do not have a square matrix anymore and cannot use the inverse directly.
+  \end{enumerate}
 \end{solution}
 
 \color{black}
@@ -118,7 +348,23 @@ $$y = f(x_1, x_2) = \exp\left(-(x_1 - 2)^2 - (x_2 - 1)^2 \right)$$
 
 
 \begin{solution}
-	Your solution here.
+  \begin{enumerate}[1.]
+    \item The plot tells us that there exists a unique maximum plant height. From the function form, we observe that it is a negative quadratic and thus our observations are true. We can further verify this with calculus. The extrema is obtained by setting the first derivative to 0. Let $f(x) = y = -3x^2 + 72x + 70$:
+      \[
+        f'(x) = -6x + 72 \implies x = 12
+      \]
+      There is only one extrema. The second derivative provides the concavity of the function:
+      \[
+        f''(x) = -6
+      \]
+      Since it is negative, it is concave down, meaning the unique extrema we obtained is a maximum.
+    \item From Question 1, the maximum height is obtained when $x = 12$, or when Nari gives her plant 12 oz per week. The plant will grow to:
+      \[
+        \boxed{
+        y = -3(12)^2 + 72(12) + 70 = 502 \text{ mm}}
+      \]
+    \item $(2, 1)$ maximizes plant height. This is a global maximum. We note that $\exp(x)$ is monotonically increasing. Thus, as $x$ becomes more negative, the height will decrease. As $(x_1 - 2)^2$ and $(x_2 - 1)^2$ always yield a value $\geq 0$ and we can rewrite as $\exp(- (x_1 - 2)^2 + (x_2 - 1)^2))$, the function is maximized when both are 0, or when $x_1 = 2, x_2 = 1$.
+  \end{enumerate}
 \end{solution}
 
 \newpage 
@@ -164,7 +410,29 @@ In this class, one of our main focuses is to model the unexpected variations in 
 \newpage
 
 \begin{solution}
-	Your solution here.
+  \begin{enumerate}[1.]
+    \item
+    \begin{enumerate}[(a)]
+      \item Gaussian distribution implies that size and weight of packages are unbounded (i.e., negative size and weights, extremely large size and weight) even with low probabilities is still an imperfect model of reality.
+      \item After sampling, we have a mean for size of 119.96 and 3.93 for weight. This is extremely close to as expected.
+   \end{enumerate} 
+\item $S$ and $W$ are positively correlated. When $S$ increases, $W$ also increases. We can verify this by observing the covariance matrix $\Sigma$ and seeing that $\cov(S, W) = 1$.
+\item We first find $\E[T]$:
+  \begin{align*}
+    \E[T] &= 60 + 0.6\E[W] + 0.2\E[S] + \E[\varepsilon] \\
+          &= 60 + 0.6(4) + 0.2(120) \\&= 86.4
+  \end{align*}
+  We now find $\var(T)$:
+  \begin{align*}
+            &= 0.6^2\var(W) + 0.2^2 \var(S) + \var(\varepsilon) + 2(0.6)(0.2)\cov(W,S)\\
+            &= 0.6^2 (1.5) + 0.2^2 (1.5) + 5 + 0.24\\
+            &= 5.84
+  \end{align*}
+\item The probability that a package is fragile is $p = P(W < 4)$. We know $W \sim \N(4, 1.5)$, meaning 4 is the mean and thus $p = 0.5$. Thus, whether a package is fragile or not can be modeled as $\Bern(p)$. This is the same for all packages (iid). Conditioned on the fact that $N = n$, the number of fragile packages $X$ is the same as running $n$ bernoulli trials, or $X \sim \Bin(n, p)$. So
+  \[
+    P(X = x \mid N = n) = \binom{n}{x}(0.5)^{x}{0.5}^{n-x} = \binom{n}{x}(0.5)^n
+  \]
+  \end{enumerate}
 \end{solution} 
 
 \newpage 
@@ -200,7 +468,12 @@ In this class, we will bridge theory and practice through implementing the metho
 \end{problem}
 
 \begin{solution}
-	Your solution here.
+  \begin{enumerate}[1.]
+    \item The issue is that instead of getting all values of $x$ and all values of $y$, Steve gets the first data point and second data point to store in $x$ and $y$ respectively. After graphing, there does appear to be a linear trend.
+    \item There is no second coordinate in the output for \texttt{y.shape} because it is a 1D array. 
+    \item $\bm{\hat{w}}$ should be shape $(2, 1)$.
+    \item The normal equation is not translated properly into numpy matrices. In addition, the result is returned instead of being stored in the weight attribute in the class. The predict function also does not take in the object itself as a parameter and thus does not have access to the fitted weights. The weights are also an attribute and thus require \texttt{self.w}.
+  \end{enumerate}
 \end{solution}
 
 \end{document}
